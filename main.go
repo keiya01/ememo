@@ -1,5 +1,12 @@
 package main
 
+import (
+	"os"
+
+	"github.com/keiya01/ememo/cli"
+)
+
 func main() {
-	return
+	var cliFlags cli.CliFlags
+	cli.StartCli(&cliFlags, os.Args)
 }
