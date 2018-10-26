@@ -7,11 +7,11 @@ import (
 	"github.com/urfave/cli"
 )
 
-type MyFlags struct {
+type CmdFlags struct {
 	TextFlag string
 }
 
-func StartCli(mf *MyFlags, args []string) error {
+func StartCli(mf *CmdFlags, args []string) error {
 	var err error
 	err = checkingUserInputValue(args)
 	if err != nil {

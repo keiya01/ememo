@@ -7,6 +7,6 @@ import (
 )
 
 func main() {
-	var cliFlags cli.CliFlags
-	cli.StartCli(&cliFlags, os.Args)
+	var cmdFlags cli.CmdFlags
+	cli.StartCli(&cmdFlags, os.Args)
 }

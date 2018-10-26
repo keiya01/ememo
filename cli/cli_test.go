@@ -12,7 +12,7 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    MyFlags
+		want    CmdFlags
 		wantErr bool
 	}{
 		{
@@ -24,7 +24,7 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 					"Hello World",
 				},
 			},
-			want: MyFlags{
+			want: CmdFlags{
 				TextFlag: "Hello World",
 			},
 		},
@@ -37,7 +37,7 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 					"Hello World",
 				},
 			},
-			want: MyFlags{
+			want: CmdFlags{
 				TextFlag: "Hello World",
 			},
 		},
@@ -46,7 +46,7 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 			args: args{
 				input: nil,
 			},
-			want: MyFlags{
+			want: CmdFlags{
 				TextFlag: "Hello World",
 			},
 			wantErr: true,
@@ -54,7 +54,7 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var mf MyFlags
+			var mf CmdFlags
 			var err error
 
 			err = checkingUserInputValue(tt.args.input)
@@ -68,6 +68,35 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 				t.Errorf("値が一致していません: get = %v, want = %v", mf.TextFlag, tt.want.TextFlag)
 			}
 
+		})
+	}
+}
+
+func Test入力された内容をtxtファイルに保存することを確認する(t *testing.T) {
+	type args struct {
+		input []string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    string
+		wantErr bool
+	}{
+		{
+			name: "textフラグからユーザーの入力を受け取ったときに入力内容をファイルに保存すること",
+			args: args{
+				input: []string{
+					"ememo",
+					"text",
+					"Hello World",
+				},
+			},
+			want: "Hello World",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Fatalf("テストに失敗しました")
 		})
 	}
 }
