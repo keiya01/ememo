@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"os"
 	"reflect"
 	"testing"
 )
@@ -20,12 +21,12 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 			args: args{
 				input: []string{
 					"ememo",
-					"text",
+					"set",
 					"Hello World",
 				},
 			},
 			want: CmdFlags{
-				TextFlag: "Hello World",
+				SetFlag: "Hello World",
 			},
 		},
 		{
@@ -33,12 +34,12 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 			args: args{
 				input: []string{
 					"ememo",
-					"-t",
+					"-s",
 					"Hello World",
 				},
 			},
 			want: CmdFlags{
-				TextFlag: "Hello World",
+				SetFlag: "Hello World",
 			},
 		},
 		{
@@ -47,14 +48,14 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 				input: nil,
 			},
 			want: CmdFlags{
-				TextFlag: "Hello World",
+				SetFlag: "Hello World",
 			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var mf CmdFlags
+			var cf CmdFlags
 			var err error
 
 			err = checkingUserInputValue(tt.args.input)
@@ -63,40 +64,71 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 				return
 			}
 
-			StartCli(&mf, tt.args.input)
-			if !tt.wantErr && !reflect.DeepEqual(mf.TextFlag, tt.want.TextFlag) {
-				t.Errorf("値が一致していません: get = %v, want = %v", mf.TextFlag, tt.want.TextFlag)
+			StartCli(&cf, tt.args.input)
+			if !tt.wantErr && !reflect.DeepEqual(cf.SetFlag, tt.want.SetFlag) {
+				t.Errorf("値が一致していません: get = %v, want = %v", cf.SetFlag, tt.want.SetFlag)
 			}
 
 		})
 	}
 }
 
-func Test入力された内容をtxtファイルに保存することを確認する(t *testing.T) {
+func Test入力された内容をtxtファイルに保存することを確認するテスト(t *testing.T) {
 	type args struct {
-		input []string
+		fileName string
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    string
-		wantErr bool
+		name     string
+		args     args
+		want     string
+		testType string
+		wantErr  bool
 	}{
+		{
+			name: "ファイルに保存した内容を出力すること",
+			args: args{
+				fileName: "test.txt",
+			},
+			want:     "Hello World",
+			testType: "read",
+		},
 		{
 			name: "textフラグからユーザーの入力を受け取ったときに入力内容をファイルに保存すること",
 			args: args{
-				input: []string{
-					"ememo",
-					"text",
-					"Hello World",
-				},
+				fileName: "test.txt",
 			},
-			want: "Hello World",
+			want:     "Hello World",
+			testType: "save",
+		},
+		{
+			name: "textフラグからユーザーの入力を受け取ったときに入力内容をファイルに保存すること",
+			args: args{
+				fileName: "test",
+			},
+			want:     "Hello World",
+			testType: "save",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Fatalf("テストに失敗しました")
+			//ファイルを上書きするとテストが通らないため初期化処理を行う
+			fileName := addExtension(tt.args.fileName)
+			os.Remove(fileName)
+
+			var cf CmdFlags
+			var get string
+
+			cf.SetFlag = tt.want
+			get = cf.saveInputText(tt.args.fileName)
+			if tt.testType == "save" && get != tt.want {
+				t.Errorf("値が一致していません: get = %v, want = %v", get, tt.want)
+			}
+
+			get = printReadFile(tt.args.fileName)
+			if tt.testType == "read" && get != tt.want {
+				t.Errorf("値が一致していません: get = %v, want = %v", get, tt.want)
+			}
+
 		})
 	}
 }
