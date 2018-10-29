@@ -4,6 +4,8 @@ import (
 	"os"
 	"reflect"
 	"testing"
+
+	"github.com/keiya01/ememo/cmd"
 )
 
 func Testメモを入力できることを確認するテスト(t *testing.T) {
@@ -13,7 +15,7 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    CmdFlags
+		want    CliFlags
 		wantErr bool
 	}{
 		{
@@ -25,7 +27,7 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 					"Hello World",
 				},
 			},
-			want: CmdFlags{
+			want: CliFlags{
 				SetFlag: "Hello World",
 			},
 		},
@@ -38,7 +40,7 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 					"Hello World",
 				},
 			},
-			want: CmdFlags{
+			want: CliFlags{
 				SetFlag: "Hello World",
 			},
 		},
@@ -47,7 +49,7 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 			args: args{
 				input: nil,
 			},
-			want: CmdFlags{
+			want: CliFlags{
 				SetFlag: "Hello World",
 			},
 			wantErr: true,
@@ -55,16 +57,14 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var cf CmdFlags
-			var err error
+			var cf CliFlags
 
-			err = checkingUserInputValue(tt.args.input)
+			err := StartCli(&cf, tt.args.input)
 			if tt.wantErr && err == nil {
-				t.Errorf("エラーが出力されていません: get = %s, want = %s", err, tt.want)
+				t.Errorf("エラーが出力されていません")
 				return
 			}
 
-			StartCli(&cf, tt.args.input)
 			if !tt.wantErr && !reflect.DeepEqual(cf.SetFlag, tt.want.SetFlag) {
 				t.Errorf("値が一致していません: get = %v, want = %v", cf.SetFlag, tt.want.SetFlag)
 			}
@@ -112,10 +112,10 @@ func Test入力された内容をtxtファイルに保存することを確認�
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			//ファイルを上書きするとテストが通らないため初期化処理を行う
-			fileName := addExtension(tt.args.fileName)
+			fileName := cmd.AddExtension(tt.args.fileName)
 			os.Remove(fileName)
 
-			var cf CmdFlags
+			var cf CliFlags
 			var get string
 
 			cf.SetFlag = tt.want

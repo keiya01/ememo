@@ -2,21 +2,21 @@ package cli
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
-	"strings"
 
+	"github.com/keiya01/ememo/cmd"
 	"github.com/urfave/cli"
 )
 
-type CmdFlags struct {
-	SetFlag string
+type CliFlags struct {
+	FileNameFlag string
+	SetFlag      string
 }
 
-func StartCli(mf *CmdFlags, args []string) error {
+func StartCli(cf *CliFlags, args []string) error {
 	var err error
-	err = checkingUserInputValue(args)
+	err = cmd.CheckingUserInputValue(args)
 	if err != nil {
 		fmt.Println(err)
 		return err
@@ -40,7 +40,7 @@ func StartCli(mf *CmdFlags, args []string) error {
 		value = args[2]
 		ctx.Set(name, value)
 
-		mf.SetFlag = ctx.String("set")
+		cf.SetFlag = ctx.String("set")
 		return nil
 	}
 
@@ -52,15 +52,8 @@ func StartCli(mf *CmdFlags, args []string) error {
 	return nil
 }
 
-func checkingUserInputValue(args []string) error {
-	if len(args) < 2 {
-		return errors.New("ERROR: 引数を入力せずに実行することは出来ません。")
-	}
-	return nil
-}
-
-func (cf CmdFlags) saveInputText(fileName string) string {
-	setFile := addExtension(fileName)
+func (cf CliFlags) saveInputText(fileName string) string {
+	setFile := cmd.AddExtension(fileName)
 	file, err := os.OpenFile(setFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		fmt.Println(err)
@@ -72,6 +65,8 @@ func (cf CmdFlags) saveInputText(fileName string) string {
 	fmt.Fprintln(file, cf.SetFlag)
 
 	contents := printReadFile(setFile)
+
+	fmt.Printf("TODOを追加しました。 \n %s", contents)
 
 	return contents
 }
@@ -94,14 +89,4 @@ func printReadFile(fileName string) string {
 	}
 
 	return contents
-}
-
-func addExtension(fileName string) string {
-	setFile := fileName
-	isTxt := strings.HasSuffix(setFile, ".txt")
-	if !isTxt {
-		setFile += ".txt"
-	}
-
-	return setFile
 }
