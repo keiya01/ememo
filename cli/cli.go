@@ -9,6 +9,7 @@ import (
 	"github.com/urfave/cli"
 )
 
+//CliFlags is a summary of user input
 type CliFlags struct {
 	FileNameFlag string
 	SetFlag      string
