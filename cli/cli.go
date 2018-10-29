@@ -1,11 +1,11 @@
 package cli
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 
 	"github.com/keiya01/ememo/cmd"
+	"github.com/keiya01/ememo/files"
 	"github.com/urfave/cli"
 )
 
@@ -53,7 +53,7 @@ func StartCli(cf *CliFlags, args []string) error {
 	return nil
 }
 
-func (cf CliFlags) saveInputText(fileName string) string {
+func (cf CliFlags) save(fileName string) string {
 	setFile := cmd.AddExtension(fileName)
 	file, err := os.OpenFile(setFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -65,29 +65,9 @@ func (cf CliFlags) saveInputText(fileName string) string {
 	//書き込み処理
 	fmt.Fprintln(file, cf.SetFlag)
 
-	contents := printReadFile(setFile)
+	contents := files.PrintReadFile(setFile)
 
-	fmt.Printf("TODOを追加しました。 \n %s", contents)
-
-	return contents
-}
-
-func printReadFile(fileName string) string {
-	var contents string
-
-	// ファイルを読み出し用にオープン
-	file, err := os.Open(fileName)
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
-	defer file.Close()
-
-	// 一行ずつ読み出し
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		contents += scanner.Text()
-	}
+	fmt.Printf("---- TODOを追加しました ---- \n\n %s", contents)
 
 	return contents
 }

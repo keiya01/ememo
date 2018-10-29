@@ -85,28 +85,18 @@ func Test入力された内容をtxtファイルに保存することを確認�
 		wantErr  bool
 	}{
 		{
-			name: "ファイルに保存した内容を出力すること",
-			args: args{
-				fileName: "test.txt",
-			},
-			want:     "Hello World",
-			testType: "read",
-		},
-		{
 			name: "textフラグからユーザーの入力を受け取ったときに入力内容をファイルに保存すること",
 			args: args{
 				fileName: "test.txt",
 			},
-			want:     "Hello World",
-			testType: "save",
+			want: "Hello World",
 		},
 		{
 			name: "textフラグからユーザーの入力を受け取ったときに入力内容をファイルに保存すること",
 			args: args{
 				fileName: "test",
 			},
-			want:     "Hello World",
-			testType: "save",
+			want: "Hello World",
 		},
 	}
 	for _, tt := range tests {
@@ -119,13 +109,8 @@ func Test入力された内容をtxtファイルに保存することを確認�
 			var get string
 
 			cf.SetFlag = tt.want
-			get = cf.saveInputText(tt.args.fileName)
-			if tt.testType == "save" && get != tt.want {
-				t.Errorf("値が一致していません: get = %v, want = %v", get, tt.want)
-			}
-
-			get = printReadFile(tt.args.fileName)
-			if tt.testType == "read" && get != tt.want {
+			get = cf.save(tt.args.fileName)
+			if get != tt.want {
 				t.Errorf("値が一致していません: get = %v, want = %v", get, tt.want)
 			}
 
