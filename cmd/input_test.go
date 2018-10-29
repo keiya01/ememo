@@ -48,3 +48,38 @@ func Testユーザーから受け取ったスライス型のデータに3つ以�
 		})
 	}
 }
+
+func Test拡張子txtの有無によって適切な値を返すことを確認する(t *testing.T) {
+	type args struct {
+		fileName string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    string
+		wantErr bool
+	}{
+		{
+			name: "拡張子がついていなければ拡張子をつけて返すことを確認する",
+			args: args{
+				fileName: "test",
+			},
+			want: "test.txt",
+		},
+		{
+			name: "拡張子がついていれば拡張子をつけずに返すことを確認する",
+			args: args{
+				fileName: "test.txt",
+			},
+			want: "test.txt",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			get := AddExtension(tt.args.fileName)
+			if get != tt.want {
+				t.Errorf("値が一致していません: get = %s want = %s", get, tt.want)
+			}
+		})
+	}
+}
