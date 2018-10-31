@@ -13,11 +13,8 @@ func CheckingUserInputValue(args []string) error {
 }
 
 func AddExtension(fileName string) string {
-	setFile := fileName
-	isTxt := strings.HasSuffix(setFile, ".txt")
-	if !isTxt {
-		setFile += ".txt"
-	}
+	spliteName := strings.Split(fileName, ".")
+	setFile := spliteName[0] + ".txt"
 
 	return setFile
 }

@@ -73,6 +73,13 @@ func Test拡張子txtの有無によって適切な値を返すことを確認�
 			},
 			want: "test.txt",
 		},
+		{
+			name: "拡張子が複数ついている場合はひとつに変更することを確認する",
+			args: args{
+				fileName: "test.exec.txt.docs.txt",
+			},
+			want: "test.txt",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

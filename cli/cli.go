@@ -42,6 +42,7 @@ func StartCli(cf *CliFlags, args []string) error {
 		ctx.Set(name, value)
 
 		cf.SetFlag = ctx.String("set")
+		cf.save("todo")
 		return nil
 	}
 
