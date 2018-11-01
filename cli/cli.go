@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/keiya01/ememo/cmd"
-	"github.com/keiya01/ememo/files"
+	"github.com/keiya01/ememo/file"
 	"github.com/urfave/cli"
 )
 
@@ -17,7 +17,7 @@ type CliFlags struct {
 
 func StartCli(cf *CliFlags, args []string) error {
 	var err error
-	err = cmd.CheckingUserInputValue(args)
+	err = cmd.CheckingUserInputArgumentValue(args)
 	if err != nil {
 		fmt.Println(err)
 		return err

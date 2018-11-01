@@ -1,6 +1,13 @@
 package cmd
 
-import "testing"
+import (
+	"io/ioutil"
+	"log"
+	"os"
+	"testing"
+
+	"github.com/keiya01/ememo/test"
+)
 
 func Testユーザーから受け取ったスライス型のデータに3つ以上のデータが入っていることを確認するテスト(t *testing.T) {
 	type args struct {
@@ -37,9 +44,9 @@ func Testユーザーから受け取ったスライス型のデータに3つ以�
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := CheckingUserInputValue(tt.args.input)
+			err := CheckingUserInputArgumentValue(tt.args.input)
 			if tt.wantErr && err == nil {
-				t.Errorf("エラーが発生していません: err = %v", err)
+				test.NotOutputtedErrorf(err, t)
 			}
 
 			if !tt.wantErr && err != nil {
@@ -85,7 +92,82 @@ func Test拡張子txtの有無によって適切な値を返すことを確認�
 		t.Run(tt.name, func(t *testing.T) {
 			get := AddExtension(tt.args.fileName)
 			if get != tt.want {
-				t.Errorf("値が一致していません: get = %s want = %s", get, tt.want)
+				test.MismatchErrorf(get, tt.want, t)
+			}
+		})
+	}
+}
+
+func Testユーザーからの入力を受け取ることを確認するテスト(t *testing.T) {
+	type args struct {
+		input string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    string
+		wantErr bool
+	}{
+		{
+			name: "文字列で入力を受け取ることを確認する",
+			args: args{
+				input: "Hello World",
+			},
+			want: "Hello World",
+		},
+		{
+			name: "文字列で入力を受け取ることを確認する",
+			args: args{
+				input: "Test Text",
+			},
+			want: "Test Text",
+		},
+		{
+			name: "入力が空ならエラーを返すことを確認する",
+			args: args{
+				input: "",
+			},
+			want:    "入力値を空にすることは出来ません",
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			content := []byte(tt.args.input)
+			tmpfile, err := ioutil.TempFile("", "example")
+			if err != nil {
+				log.Fatal(err)
+			}
+			defer os.Remove(tmpfile.Name()) // clean up
+
+			//ファイルへの書き込む
+			if _, err := tmpfile.Write(content); err != nil {
+				log.Fatal(err)
+			}
+
+			//ファイル情報をtmpfileに格納する
+			if _, err := tmpfile.Seek(0, 0); err != nil {
+				log.Fatal(err)
+			}
+
+			//もともとのos.Stdin情報をoldStdinに格納しておき、
+			//最後にoldStdinをos.Stdinに代入して初期化する
+			oldStdin := os.Stdin
+			defer func() { os.Stdin = oldStdin }() // Restore original Stdin
+
+			//tmpfile情報をos.Stdinに代入することで、os.Stdinはポインタ型なので
+			//GetUserInputValue()で参照することができる
+			os.Stdin = tmpfile
+			get, err := GetUserInputValue()
+			if tt.wantErr && err == nil {
+				test.NotOutputtedErrorf(err, t)
+			}
+			if !tt.wantErr && get != tt.want {
+				test.MismatchErrorf(get, tt.want, t)
+			}
+
+			if err := tmpfile.Close(); err != nil {
+				log.Fatal(err)
 			}
 		})
 	}
