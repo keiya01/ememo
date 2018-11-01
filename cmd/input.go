@@ -3,9 +3,10 @@ package cmd
 import (
 	"bufio"
 	"errors"
-	"log"
 	"os"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
 func CheckingUserInputArgumentValue(args []string) error {
@@ -27,10 +28,10 @@ func GetUserInputValue() (string, error) {
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	inputText := scanner.Text()
-	log.Println("input value is ", inputText)
-
 	if inputText == "" {
 		return "", errors.New("入力値を空にすることは出来ません")
 	}
+
+	color.HiGreen("input value is [ %s ]", inputText)
 	return inputText, nil
 }

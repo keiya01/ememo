@@ -22,7 +22,7 @@ func fileScan(file *os.File) string {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		contents += scanner.Text()
+		contents = contents + scanner.Text() + "\n"
 	}
 
 	return contents

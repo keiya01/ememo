@@ -2,8 +2,10 @@ package cli
 
 import (
 	"fmt"
+	"log"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/keiya01/ememo/cmd"
 	"github.com/keiya01/ememo/file"
 	"github.com/urfave/cli"
@@ -42,7 +44,15 @@ func StartCli(cf *CliFlags, args []string) error {
 		ctx.Set(name, value)
 
 		cf.SetFlag = ctx.String("set")
-		cf.save("todo")
+
+		fmt.Print("保存するファイル名を入力してください：")
+		fileName, err := cmd.GetUserInputValue()
+		if err != nil {
+			color.Red("Error: %v", err)
+			return err
+		}
+
+		cf.save(fileName)
 		return nil
 	}
 
@@ -68,7 +78,9 @@ func (cf CliFlags) save(fileName string) string {
 
 	contents := files.PrintReadFile(setFile)
 
-	fmt.Printf("---- TODOを追加しました ---- \n\n %s", contents)
+	log.Printf("TODOを追加しました")
+	fmt.Printf(contents)
+	fmt.Print("=====END=====")
 
 	return contents
 }
