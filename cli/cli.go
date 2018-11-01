@@ -8,6 +8,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/keiya01/ememo/cmd"
 	"github.com/keiya01/ememo/file"
+	"github.com/keiya01/ememo/format"
 	"github.com/urfave/cli"
 )
 
@@ -72,14 +73,14 @@ func (cf CliFlags) save(fileName string) string {
 		return ""
 	}
 	defer file.Close()
-
+	contents := format.ChengeToMarkdown(cf.SetFlag)
 	//書き込み処理
-	fmt.Fprintln(file, cf.SetFlag)
+	fmt.Fprintln(file, contents)
 
-	contents := files.PrintReadFile(setFile)
+	fileContents := files.PrintReadFile(setFile)
 
 	log.Printf("TODOを追加しました")
-	fmt.Printf(contents)
+	fmt.Printf(fileContents)
 	fmt.Print("=====END=====")
 
 	return contents
