@@ -14,15 +14,15 @@ import (
 
 //CliFlags is a summary of user input
 type CliFlags struct {
-	FileNameFlag string
-	SetFlag      string
+	TextFlag string
+	MarkFlag bool
 }
 
 func StartCli(cf *CliFlags, args []string) error {
 	var err error
 	err = cmd.CheckingUserInputArgumentValue(args)
 	if err != nil {
-		fmt.Println(err)
+		color.Red("ERROR: %v", err)
 		return err
 	}
 
@@ -33,19 +33,23 @@ func StartCli(cf *CliFlags, args []string) error {
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:  "set, s",
+			Name:  "text, t",
 			Usage: "set contents to text file.",
+		},
+		cli.BoolFlag{
+			Name:  "mark, m",
+			Usage: "show markdown contents.",
 		},
 	}
 
-	app.Action = func(ctx *cli.Context) error {
-		var name, value string
-		name = args[1]
-		value = args[2]
-		ctx.Set(name, value)
+	app.Action = func(c *cli.Context) error {
+		if c.Bool("mark") {
+			format.ShowMarkdown()
+			return nil
+		}
 
-		cf.SetFlag = ctx.String("set")
-
+		cf.TextFlag = c.String("text")
+		fmt.Printf("TextFlag: %s", cf.TextFlag)
 		fmt.Print("保存するファイル名を入力してください：")
 		fileName, err := cmd.GetUserInputValue()
 		if err != nil {
@@ -59,6 +63,7 @@ func StartCli(cf *CliFlags, args []string) error {
 
 	err = app.Run(args)
 	if err != nil {
+		color.Red("Error: %v", err)
 		return err
 	}
 
@@ -73,7 +78,9 @@ func (cf CliFlags) save(fileName string) string {
 		return ""
 	}
 	defer file.Close()
-	contents := format.ChengeToMarkdown(cf.SetFlag)
+
+	contents := format.ChengeToMarkdown(cf.TextFlag)
+
 	//書き込み処理
 	fmt.Fprintln(file, contents)
 
@@ -83,5 +90,5 @@ func (cf CliFlags) save(fileName string) string {
 	fmt.Printf(fileContents)
 	fmt.Print("=====END=====")
 
-	return contents
+	return fileContents
 }

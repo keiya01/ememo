@@ -10,8 +10,8 @@ import (
 )
 
 func CheckingUserInputArgumentValue(args []string) error {
-	if len(args) < 3 {
-		return errors.New("ERROR: 引数を2つ以上入力してください。")
+	if len(args) < 2 {
+		return errors.New("引数を2つ以上入力してください。")
 	}
 	return nil
 }
