@@ -5,68 +5,59 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/keiya01/ememo/cmd"
+	"github.com/keiya01/ememo/input"
 )
 
 func Testメモを入力できることを確認するテスト(t *testing.T) {
 	type args struct {
-		input []string
+		input string
 	}
 	tests := []struct {
 		name    string
 		args    args
-		want    CliFlags
+		want    TextFlag
 		wantErr bool
 	}{
 		{
-			name: "-textフラグからユーザーの入力を受け取ること",
+			name: "ユーザーの入力「Hello World」をTextFlagに登録できることを確認する",
 			args: args{
-				input: []string{
-					"ememo",
-					"-text",
-					"Hello World",
-				},
+				input: "Hello World",
 			},
-			want: CliFlags{
-				TextFlag: "Hello World",
+			want: TextFlag{
+				Value: "Hello World",
 			},
 		},
 		{
-			name: "-tフラグからユーザーの入力を受け取ること",
+			name: "ユーザーの入力「Hello」をTextFlagに登録できることを確認する",
 			args: args{
-				input: []string{
-					"ememo",
-					"-t",
-					"Hello World",
-				},
+				input: "Hello",
 			},
-			want: CliFlags{
-				TextFlag: "Hello World",
+			want: TextFlag{
+				Value: "Hello",
 			},
 		},
 		{
 			name: "入力が空であればエラーを出力すること",
 			args: args{
-				input: nil,
+				input: "",
 			},
-			want: CliFlags{
-				TextFlag: "Hello World",
+			want: TextFlag{
+				Value: "Hello World",
 			},
 			wantErr: true,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			var cf CliFlags
+			tf, err := NewTextFlag(tt.args.input)
 
-			err := StartCli(&cf, tt.args.input)
 			if tt.wantErr && err == nil {
 				t.Errorf("エラーが出力されていません")
 				return
 			}
 
-			if !tt.wantErr && !reflect.DeepEqual(cf.TextFlag, tt.want.TextFlag) {
-				t.Errorf("値が一致していません: get = %v, want = %v", cf.TextFlag, tt.want.TextFlag)
+			if !tt.wantErr && !reflect.DeepEqual(tf.Value, tt.want.Value) {
+				t.Errorf("値が一致していません: get = %v, want = %v", tf.Value, tt.want.Value)
 			}
 
 		})
@@ -104,14 +95,14 @@ func Test入力された内容をtxtファイルに保存することを確認�
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			//ファイルを上書きするとテストが通らないため初期化処理を行う
-			fileName := cmd.AddExtension(tt.args.fileName)
+			fileName := input.AddExtension(tt.args.fileName)
 			defer os.Remove(fileName)
 
-			var cf CliFlags
+			var tf TextFlag
 			var get string
 
-			cf.TextFlag = tt.args.textFlag
-			get = cf.save(tt.args.fileName)
+			tf.Value = tt.args.textFlag
+			get = tf.save(tt.args.fileName)
 			if get != tt.want {
 				t.Errorf("値が一致していません: get = %v, want = %v", get, tt.want)
 			}

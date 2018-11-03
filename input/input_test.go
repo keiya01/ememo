@@ -1,4 +1,4 @@
-package cmd
+package input
 
 import (
 	"io/ioutil"

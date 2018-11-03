@@ -1,7 +1,7 @@
-目標：出来るだけ簡単にメモを書いてtext fileに保存するCLIを作る
+# 目標：出来るだけ簡単にメモを書いてtext fileに保存するCLIを作る
 
 
-## Test of cmd package
+# Test of input package
 
 ### ユーザーから受け取ったスライス型のデータに3つ以上のデータが入っていることを確認する
 - [x] 引数に受け取ったスライス型のデータに2つ以上のデータが入っていることを確認すること
@@ -20,18 +20,18 @@
 - [ ] 
 - [ ] 
 
-## Test of files package
+# Test of files package
 
 ### テキストファイルからデータを読み取ることを確認する
 - [x] 引数に指定したファイルを一行ずつ読み込む
 - [x] 引数に指定した改行込みのファイルを一行ずつ読み込み出力する
 
 
-## Test of cli package
+# Test of cli package
 
 ### メモを入力できることを確認する
-- [x] -textフラグからユーザーの入力を受け取ること
-- [x] -tフラグからユーザーの入力を受け取ること
+- [x] ユーザーの入力「Hello World」をTextFlagに登録できることを確認する
+- [x] ユーザーの入力「Hello」をTextFlagに登録できることを確認する
 - [x] 入力が空であればエラーを出力すること
 
 ### 入力された内容をtxtファイルに保存することを確認する
@@ -49,13 +49,13 @@
 - [ ]
 - [ ]
 
-## Test of color package
+# Test of color package
 
 ### 結果によって文字の色を変えることを確認する
 - [x] github.com/fatih/colorで実装
 
 
-## Test of format package
+# Test of format package
 
 ### マークダウンによってフォーマットが変化することを確認する
 - [x] 「-」を「●」に変換して出力する

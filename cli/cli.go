@@ -1,26 +1,16 @@
 package cli
 
 import (
-	"fmt"
-	"log"
-	"os"
+	"errors"
 
 	"github.com/fatih/color"
-	"github.com/keiya01/ememo/cmd"
-	"github.com/keiya01/ememo/file"
 	"github.com/keiya01/ememo/format"
+	"github.com/keiya01/ememo/input"
 	"github.com/urfave/cli"
 )
 
-//CliFlags is a summary of user input
-type CliFlags struct {
-	TextFlag string
-	MarkFlag bool
-}
-
-func StartCli(cf *CliFlags, args []string) error {
-	var err error
-	err = cmd.CheckingUserInputArgumentValue(args)
+func StartCli(args []string) error {
+	err := input.CheckingUserInputArgumentValue(args)
 	if err != nil {
 		color.Red("ERROR: %v", err)
 		return err
@@ -48,47 +38,22 @@ func StartCli(cf *CliFlags, args []string) error {
 			return nil
 		}
 
-		cf.TextFlag = c.String("text")
-		fmt.Printf("TextFlag: %s", cf.TextFlag)
-		fmt.Print("保存するファイル名を入力してください：")
-		fileName, err := cmd.GetUserInputValue()
+		textFlag, err := NewTextFlag(c.String("text"))
 		if err != nil {
-			color.Red("Error: %v", err)
+			color.Red("ERROR: %v", err)
+			return err
+		}
+		err = textFlag.FlagAction()
+		if err != nil {
+			color.Red("ERROR: %v", err)
 			return err
 		}
 
-		cf.save(fileName)
-		return nil
-	}
-
-	err = app.Run(args)
-	if err != nil {
-		color.Red("Error: %v", err)
+		err = errors.New("「" + args[1] + "」オプションは使用できません。「-h」オプションで確認してください。")
 		return err
 	}
 
+	app.Run(args)
+
 	return nil
-}
-
-func (cf CliFlags) save(fileName string) string {
-	setFile := cmd.AddExtension(fileName)
-	file, err := os.OpenFile(setFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
-	defer file.Close()
-
-	contents := format.ChengeToMarkdown(cf.TextFlag)
-
-	//書き込み処理
-	fmt.Fprintln(file, contents)
-
-	fileContents := files.PrintReadFile(setFile)
-
-	log.Printf("TODOを追加しました")
-	fmt.Printf(fileContents)
-	fmt.Print("=====END=====")
-
-	return fileContents
 }
