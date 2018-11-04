@@ -24,6 +24,8 @@ func ChengeToMarkdown(text string) string {
 			contents += sentence
 		}
 
+		contents += " [ ]"
+
 		if totalSentences != 1 {
 			contents += "\n"
 		}

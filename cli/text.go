@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -15,12 +14,8 @@ type TextFlag struct {
 	Value string
 }
 
-func NewTextFlag(value string) (*TextFlag, error) {
-	if value == "" {
-		return &TextFlag{}, errors.New("値を空にすることは出来ません")
-	}
-
-	return &TextFlag{Value: value}, nil
+func NewTextFlag(value string) *TextFlag {
+	return &TextFlag{Value: value}
 }
 
 func (t *TextFlag) FlagAction() error {
@@ -53,7 +48,6 @@ func (t TextFlag) save(fileName string) string {
 
 	log.Printf("TODOを追加しました")
 	fmt.Printf(fileContents)
-	fmt.Print("=====END=====")
 
 	return fileContents
 }

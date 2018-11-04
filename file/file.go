@@ -2,14 +2,15 @@ package file
 
 import (
 	"bufio"
-	"fmt"
 	"os"
+
+	"github.com/fatih/color"
 )
 
 func PrintReadFile(fileName string) string {
 	file, err := os.Open(fileName)
 	if err != nil {
-		fmt.Println(err)
+		color.Red("ERROR: %v", err)
 		return ""
 	}
 	defer file.Close()
