@@ -10,8 +10,10 @@ func ChengeToMarkdown(text string) string {
 	sentences := strings.Split(text, ";")
 	totalSentences := len(sentences)
 	for _, sentence := range sentences {
+		var i int
 
 		if sentence == "" {
+			i++
 			continue
 		}
 
@@ -26,9 +28,11 @@ func ChengeToMarkdown(text string) string {
 
 		contents += " [ ]"
 
-		if totalSentences != 1 {
+		if totalSentences != 1 && i < totalSentences {
 			contents += "\n"
 		}
+
+		i++
 
 	}
 

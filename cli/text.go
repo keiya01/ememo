@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/fatih/color"
 	"github.com/keiya01/ememo/file"
 	"github.com/keiya01/ememo/format"
 	"github.com/keiya01/ememo/input"
@@ -34,7 +35,7 @@ func (t TextFlag) save(fileName string) string {
 	setFile := input.AddExtension(fileName)
 	fileData, err := os.OpenFile(setFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
-		fmt.Println(err)
+		color.Red("ERROR: %v", err)
 		return ""
 	}
 	defer fileData.Close()

@@ -15,15 +15,23 @@ func PrintReadFile(fileName string) string {
 	}
 	defer file.Close()
 
-	return fileScan(file)
+	return FileScan(file, func(scanner *bufio.Scanner, index int) string {
+		return scanner.Text() + "\n"
+	})
 }
 
-func fileScan(file *os.File) string {
+func FileScan(file *os.File, f func(scanner *bufio.Scanner, index int) string) string {
 	var contents string
+	index := 1
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		contents = contents + scanner.Text() + "\n"
+		if len(scanner.Text()) == 0 {
+			index++
+			continue
+		}
+		contents += f(scanner, index)
+		index++
 	}
 
 	return contents

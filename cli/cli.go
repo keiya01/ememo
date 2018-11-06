@@ -62,8 +62,18 @@ func StartCli(args []string) error {
 			setFile := input.AddExtension(read)
 			fileContents := file.PrintReadFile(setFile)
 			fmt.Print("===== TODO LIST =====")
-			color.Blue("\n%s\n", fileContents)
+			color.Blue("\n%s", fileContents)
 			fmt.Print("===== END =====")
+			return nil
+		}
+
+		if comp := c.String("comp"); comp != "" {
+			cf := NewCompFlag(comp)
+			_, err := cf.FlagAction()
+			if err != nil {
+				color.Red("ERROR: %v", err)
+				return err
+			}
 			return nil
 		}
 

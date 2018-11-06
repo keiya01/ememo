@@ -21,14 +21,14 @@ func Testテキストファイルからデータを読み取ることを確認�
 			args: args{
 				value: "Hello World",
 			},
-			want: "Hello World",
+			want: "Hello World\n",
 		},
 		{
 			name: "引数に指定した改行込みのファイルを一行ずつ読み込み出力する",
 			args: args{
 				value: "Hello World\nHello World",
 			},
-			want: "Hello WorldHello World",
+			want: "Hello World\nHello World\n",
 		},
 	}
 	for _, tt := range tests {

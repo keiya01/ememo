@@ -1,8 +1,6 @@
 package cli
 
 import (
-	"io/ioutil"
-	"log"
 	"os"
 	"reflect"
 	"testing"
@@ -138,49 +136,21 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			//Tempファイルの作成
-			tmpfile, err := ioutil.TempFile("", "example")
-			if err != nil {
-				log.Fatal(err)
-			}
-			defer os.Remove(tmpfile.Name()) // clean up
+			test.InputValueCheck(tt.args.fileName, func() {
+				tf := NewTextFlag(tt.args.input)
+				err := tf.FlagAction()
+				defer os.Remove(tt.args.fileName)
 
-			//Tempファイルへ書き込む
-			content := []byte(tt.args.fileName)
-			if _, err := tmpfile.Write(content); err != nil {
-				log.Fatal(err)
-			}
+				if tt.wantErr && err == nil {
+					test.NotOutputtedErrorf(err, t)
+				}
 
-			//Tempファイル情報をtmpfileに格納する
-			if _, err := tmpfile.Seek(0, 0); err != nil {
-				log.Fatal(err)
-			}
+				get := file.PrintReadFile(tt.args.fileName)
+				if !tt.wantErr && get != tt.want {
+					test.MismatchErrorf(get, tt.want, t)
+				}
 
-			//もともとのos.Stdin情報をoldStdinに格納しておき、
-			//最後にoldStdinをos.Stdinに代入して初期化する
-			oldStdin := os.Stdin
-			defer func() { os.Stdin = oldStdin }() // Restore original Stdin
-
-			//tmpfile情報をos.Stdinに代入することで、os.Stdinはポインタ型なので
-			//関数内でos.Stdinを読み込むことで参照することができる
-			os.Stdin = tmpfile
-
-			tf := NewTextFlag(tt.args.input)
-			err = tf.FlagAction()
-			defer os.Remove(tt.args.fileName)
-
-			if tt.wantErr && err == nil {
-				test.NotOutputtedErrorf(err, t)
-			}
-
-			get := file.PrintReadFile(tt.args.fileName)
-			if !tt.wantErr && get != tt.want {
-				test.MismatchErrorf(get, tt.want, t)
-			}
-
-			if err := tmpfile.Close(); err != nil {
-				log.Fatal(err)
-			}
+			})
 
 		})
 	}
