@@ -3,6 +3,7 @@ package cli
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/fatih/color"
 	"github.com/keiya01/ememo/file"
@@ -61,8 +62,16 @@ func StartCli(args []string) error {
 		if read := c.String("read"); read != "" {
 			setFile := input.AddExtension(read)
 			fileContents := file.PrintReadFile(setFile)
-			fmt.Print("===== TODO LIST =====")
-			color.Blue("\n%s", fileContents)
+			sentences := strings.Split(fileContents, "\n")
+
+			fmt.Print("===== TODO LIST =====\n\n")
+			for i := 0; i < len(sentences); i++ {
+				if strings.HasSuffix(sentences[i], "[x]") {
+					color.Cyan("%s", sentences[i])
+				} else {
+					color.Red("%s", sentences[i])
+				}
+			}
 			fmt.Print("===== END =====")
 			return nil
 		}
