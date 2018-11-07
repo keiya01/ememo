@@ -1,79 +1,25 @@
-# 目標：出来るだけ簡単にメモを書いてtext fileに保存するCLIを作る
+# ememo
+This tool makes it easy to manage TODO from the command line.
 
+## Command
 
-# Test of input package
+- `--text || -t`
+    - Set contents to text file.Please put the text in the first argument.
+    - After entering the content you will be asked for the file name you want to register, please enter the file name.
 
-### ユーザーから受け取ったスライス型のデータに3つ以上のデータが入っていることを確認する
-- [x] 引数に受け取ったスライス型のデータに2つ以上のデータが入っていることを確認すること
-- [x] スライス型のデータの数が3つ以下ならエラーを返すこと
+- `--read || -r`
+    - show text file contents.Please put the file name in the first argument.
 
-### 拡張子txtの有無によって適切な値を返すことを確認する
-- [x] 拡張子がついていなければ拡張子をつけて返すことを確認する
-- [x] 拡張子がついていれば拡張子をつけずに返すことを確認する
-- [x] 拡張子が複数ついている場合はひとつに変更することを確認する
+- `--comp || -c`
+    - Check the completed TODO.Please enter the file name as an argument.
+    - When entering the file name, the TODO list will be displayed. Please enter the completed TODO by the number.
 
-### ユーザーからの入力を受け取ることを確認する
-- [x] 文字列で入力を受け取ることを確認する
-- [x] 入力が空ならエラーを返すことを確認する
+- `--mark || -m`
+    - show markdown contents.Please do not enter anything in the argument.
 
-### ユーザーの入力をTempファイルに保存することを確認する
-- [ ] ユーザーの入力がTempファイルに保存されていることを確認する
-- [ ] 入力が空なら保存せず、エラーを返すことを確認する
+# Markdown
+- ` - ` : This character is converted to ` ● ` so you can easily create a list.
 
-# Test of files package
+-  ` = ` : This character is converted to ` ◎ `, please use it for important items.
 
-### テキストファイルからデータを読み取ることを確認する
-- [x] 引数に指定したファイルを一行ずつ読み込む
-- [x] 引数に指定した改行込みのファイルを一行ずつ読み込み出力する
-
-
-# Test of cli package
-
-### メモを入力できることを確認する
-- [x] 入力した内容が指定したテキストファイルに保存されていることを確認する
-- [x] ファイル名が空のときエラーが出力されていることを確認する
-
-### ユーザーの入力を受け取ることができることを確認する
-- [x] ユーザーの入力「Hello World」をTextFlagに登録できることを確認する
-- [x] ユーザーの入力「Hello」をTextFlagに登録できることを確認する
-- [x] 入力が空であればエラーを出力すること
-
-### 入力された内容をtxtファイルに保存することを確認する
-- [x] --textフラグからユーザーの入力を受け取ったときに入力内容をファイルに保存すること
-- [x] -tフラグからユーザーの入力を受け取ったときに入力内容をファイルに保存すること
-- [x] ファイルに保存した内容を出力すること
-- [x] ファイルに保存したら、保存に成功したことをメッセージで出力すること
-
-### マークダウンのコマンドが表示されることを確認する（出力するだけなのでテスト書かない）
-- [x] bool型の--markフラグを受け取ったときにマークダウンのコマンドを表示すること
-- [x] bool型の-mフラグを受け取ったときにマークダウンのコマンドを表示すること
-
-### 指定されたtxtファイルの中身を出力することを確認する
-- [x] --readフラグを受けとったときに入力されたファイル名の中身を出力すること
-- [x] -rフラグを受けとったときに入力されたファイル名の中身を出力すること
-
-### CompFlagが生成されることを確認する
-- [x] 引数にtestを渡したときにCompFlagのValueにtestが格納されること
-- [x] 引数にtodoを渡したときにCompFlagのValueにtodoが格納されること
-
-### 指定されたファイルのTODOにチェックを入れられることを確認する
-- [x] test.txtの中の「Hello World [ ]」の「[ ]」に「[x]」のようにチェックマークが入ることを確認する
-- [x] test.txtの中の「Hello [ ]」の「[ ]」に「[x]」のようにチェックマークが入ることを確認する
-- [x] 入力値が数字以外のときにエラーを返すことを確認する
-
-### 指定されたtxtファイルの中身を空にする
-- [ ] --emptyフラグを受けとったときに入力されたファイル名の中身を空にする
-- [ ] -eフラグを受けとったときに入力されたファイル名の中身を空にする
-
-# Test of color package
-
-### 結果によって文字の色を変えることを確認する
-- [x] github.com/fatih/colorで実装
-
-
-# Test of format package
-
-### マークダウンによってフォーマットが変化することを確認する
-- [x] 「-」を「●」に変換して出力する
-- [x] 「=」を「◎」に変換して出力する
-- [x] 「;」を「1行の終わり」として出力する
+- ` ; ` : Please use this character at the end of the line as it is recognized as ` newline `.
