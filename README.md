@@ -17,7 +17,7 @@ This tool makes it easy to manage TODO from the command line.
 - `--mark || -m`
     - show markdown contents.Please do not enter anything in the argument.
 
-# Markdown
+## Markdown
 - ` - ` : This character is converted to ` ● ` so you can easily create a list.
 
 -  ` = ` : This character is converted to ` ◎ `, please use it for important items.
