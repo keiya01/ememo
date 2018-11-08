@@ -4,8 +4,8 @@ This tool makes it easy to manage TODO from the command line.
 ## Command
 
 - `--text || -t`
-    - Set contents to text file.Please put the text in the first argument.
-    - After entering the content you will be asked for the file name you want to register, please enter the file name.
+    - Set contents to text file.Please put the file name in the first argument.
+    - After entering the content you will be asked for the TODO you want to register, please enter the TODO.
 
 - `--read || -r`
     - show text file contents.Please put the file name in the first argument.
