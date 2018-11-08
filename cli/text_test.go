@@ -30,12 +30,12 @@ func Testユーザーの入力を受け取ることができることを確認�
 			},
 		},
 		{
-			name: "ユーザーの入力「world」をTextFlagに登録できることを確認する",
+			name: "ユーザーの入力「hello」をTextFlagに登録できることを確認する",
 			args: args{
-				input: "world",
+				input: "hello",
 			},
 			want: TextFlag{
-				Value: "world.txt",
+				Value: "hello.txt",
 			},
 		},
 	}
