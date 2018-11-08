@@ -16,39 +16,38 @@ type TextFlag struct {
 }
 
 func NewTextFlag(value string) *TextFlag {
-	return &TextFlag{Value: value}
+	file := input.AddExtension(value)
+	return &TextFlag{Value: file}
 }
 
 func (t *TextFlag) FlagAction() error {
-	fmt.Print("保存するファイル名を入力してください：")
-	fileName, err := input.GetUserInputValue()
+	fmt.Print("TODOを入力してください：")
+	text, err := input.GetUserInputValue()
 	if err != nil {
 		return err
 	}
 
-	t.save(fileName)
+	t.save(text)
 
 	return nil
 }
 
-func (t TextFlag) save(fileName string) string {
-	setFile := input.AddExtension(fileName)
-	fileData, err := os.OpenFile(setFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+func (t TextFlag) save(text string) string {
+	fileData, err := os.OpenFile(t.Value, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		color.Red("ERROR: %v", err)
 		return ""
 	}
 	defer fileData.Close()
 
-	contents := format.ChengeToMarkdown(t.Value)
+	contents := format.ChengeToMarkdown(text)
 
 	//書き込み処理
 	fmt.Fprintln(fileData, contents)
 
-	fileContents := file.PrintReadFile(setFile)
+	fileContents := file.PrintReadFile(t.Value)
 
 	log.Printf("TODOを追加しました")
-	fmt.Printf(fileContents)
 
 	return fileContents
 }

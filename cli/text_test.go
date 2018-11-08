@@ -21,21 +21,21 @@ func Testユーザーの入力を受け取ることができることを確認�
 		wantErr bool
 	}{
 		{
-			name: "ユーザーの入力「Hello World」をTextFlagに登録できることを確認する",
+			name: "ユーザーの入力「hello.txt」をTextFlagに登録できることを確認する",
 			args: args{
-				input: "Hello World",
+				input: "hello.txt",
 			},
 			want: TextFlag{
-				Value: "Hello World",
+				Value: "hello.txt",
 			},
 		},
 		{
-			name: "ユーザーの入力「Hello」をTextFlagに登録できることを確認する",
+			name: "ユーザーの入力「world」をTextFlagに登録できることを確認する",
 			args: args{
-				input: "Hello",
+				input: "world",
 			},
 			want: TextFlag{
-				Value: "Hello",
+				Value: "world.txt",
 			},
 		},
 	}
@@ -53,8 +53,8 @@ func Testユーザーの入力を受け取ることができることを確認�
 
 func Test入力された内容をtxtファイルに保存することを確認するテスト(t *testing.T) {
 	type args struct {
-		fileName string
 		textFlag string
+		inputVal string
 	}
 	tests := []struct {
 		name    string
@@ -65,16 +65,16 @@ func Test入力された内容をtxtファイルに保存することを確認�
 		{
 			name: "-textフラグからユーザーの入力を受け取ったときに入力内容をファイルに保存すること",
 			args: args{
-				fileName: "test.txt",
-				textFlag: "Hello World",
+				textFlag: "test.txt",
+				inputVal: "Hello World",
 			},
 			want: "Hello World [ ]\n",
 		},
 		{
 			name: "-textフラグからユーザーの入力を受け取ったときに入力内容をファイルに保存すること",
 			args: args{
-				fileName: "test",
-				textFlag: "Hello World",
+				textFlag: "test",
+				inputVal: "Hello World",
 			},
 			want: "Hello World [ ]\n",
 		},
@@ -82,13 +82,11 @@ func Test入力された内容をtxtファイルに保存することを確認�
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			//ファイルを上書きするとテストが通らないため初期化処理を行う
-			fileName := input.AddExtension(tt.args.fileName)
+			fileName := input.AddExtension(tt.args.textFlag)
 			defer os.Remove(fileName)
 
-			var get string
-
 			tf := NewTextFlag(tt.args.textFlag)
-			get = tf.save(tt.args.fileName)
+			get := tf.save(tt.args.inputVal)
 			if get != tt.want {
 				t.Errorf("値が一致していません: get = %v, want = %v", get, tt.want)
 			}
@@ -127,8 +125,8 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 		{
 			name: "ファイル名が空のときエラーが出力されていることを確認する",
 			args: args{
-				input:    "Hello World",
-				fileName: "",
+				input:    "",
+				fileName: "test",
 			},
 			want:    "Hello World [ ]\n",
 			wantErr: true,
@@ -136,8 +134,8 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			test.InputValueCheck(tt.args.fileName, func() {
-				tf := NewTextFlag(tt.args.input)
+			test.InputValueCheck(tt.args.input, func() {
+				tf := NewTextFlag(tt.args.fileName)
 				err := tf.FlagAction()
 				defer os.Remove(tt.args.fileName)
 
@@ -145,7 +143,7 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 					test.NotOutputtedErrorf(err, t)
 				}
 
-				get := file.PrintReadFile(tt.args.fileName)
+				get := file.PrintReadFile(tf.Value)
 				if !tt.wantErr && get != tt.want {
 					test.MismatchErrorf(get, tt.want, t)
 				}

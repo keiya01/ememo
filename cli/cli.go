@@ -17,12 +17,6 @@ type flags interface {
 }
 
 func StartCli(args []string) error {
-	err := input.CheckingUserInputArgumentValue(args)
-	if err != nil {
-		color.Red("ERROR: %v", err)
-		return err
-	}
-
 	app := cli.NewApp()
 	app.Name = "ememo"
 	app.Usage = "簡単にテキストファイルにメモを作成するツールです。"
@@ -49,9 +43,9 @@ func StartCli(args []string) error {
 
 	app.Action = func(c *cli.Context) error {
 
-		if text := c.String("text"); text != "" {
-			textFlag := NewTextFlag(text)
-			err = textFlag.FlagAction()
+		if fileName := c.String("text"); fileName != "" {
+			textFlag := NewTextFlag(fileName)
+			err := textFlag.FlagAction()
 			if err != nil {
 				color.Red("ERROR: %v", err)
 				return err
@@ -73,6 +67,7 @@ func StartCli(args []string) error {
 				}
 			}
 			fmt.Print("===== END =====")
+
 			return nil
 		}
 
@@ -90,7 +85,7 @@ func StartCli(args []string) error {
 			format.ShowMarkdown()
 			return nil
 		}
-		err = errors.New("「" + args[1] + "」オプションは使用できません。「-h」オプションで確認してください。")
+		err := errors.New("「" + args[1] + "」オプションは使用できません。「-h」オプションで確認してください。")
 		color.Red("ERROR: %v", err)
 		return err
 	}

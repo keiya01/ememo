@@ -32,6 +32,6 @@ func GetUserInputValue() (string, error) {
 		return "", errors.New("入力値を空にすることは出来ません")
 	}
 
-	color.HiGreen("input value is [ %s ]", inputText)
+	color.HiGreen("input value is ` %s `", inputText)
 	return inputText, nil
 }
