@@ -75,7 +75,7 @@ func StartCli(args []string) error {
 			cf := NewCompFlag(comp)
 			_, err := cf.FlagAction()
 			if err != nil {
-				color.Red("ERROR: %v", err)
+				color.HiRed("ERROR: %v", err)
 				return err
 			}
 			return nil
@@ -86,7 +86,7 @@ func StartCli(args []string) error {
 			return nil
 		}
 		err := errors.New("「" + args[1] + "」オプションは使用できません。「-h」オプションで確認してください。")
-		color.Red("ERROR: %v", err)
+		color.HiRed("ERROR: %v", err)
 		return err
 	}
 

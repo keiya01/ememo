@@ -6,43 +6,26 @@ import (
 )
 
 func ChengeToMarkdown(text string) string {
-	var contents string
-	sentences := strings.Split(text, ";")
-	totalSentences := len(sentences)
-	for _, sentence := range sentences {
-		var i int
+	var sentence string
 
-		if sentence == "" {
-			i++
-			continue
-		}
-
-		switch string([]rune(sentence)[0]) {
-		case "-":
-			contents += strings.Replace(sentence, "-", " ● ", 1)
-		case "=":
-			contents += strings.Replace(sentence, "=", " ◎ ", 1)
-		default:
-			contents += sentence
-		}
-
-		contents += " [ ]"
-
-		if totalSentences != 1 && i < totalSentences {
-			contents += "\n"
-		}
-
-		i++
-
+	switch string([]rune(text)[0]) {
+	case "-":
+		sentence = strings.Replace(text, "-", " ● ", 1)
+	case "=":
+		sentence = strings.Replace(text, "=", " ◎ ", 1)
+	default:
+		sentence = text
 	}
 
-	return contents
+	sentence += "[ ]\n"
+
+	return sentence
 }
 
 func ShowMarkdown() {
 	fmt.Print("\n====== Markdown List ======\n\n")
 	fmt.Print(" - : [ ● ] に変換されるので簡単にリストを作成できます\n")
 	fmt.Print(" = : [ ◎ ] に変換されるので重要な項目に利用してください\n")
-	fmt.Print(" ; : [ 改行 ] として認識されるので行の終わりに利用してください\n")
+	fmt.Print(" end : [ 入力終了 ] として認識されるので入力が終了したら`end`と入力してください\n")
 	fmt.Print("\n====== END ======\n")
 }

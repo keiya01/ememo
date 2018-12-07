@@ -54,7 +54,7 @@ func Testユーザーの入力を受け取ることができることを確認�
 func Test入力された内容をtxtファイルに保存することを確認するテスト(t *testing.T) {
 	type args struct {
 		textFlag string
-		inputVal string
+		inputVal []string
 	}
 	tests := []struct {
 		name    string
@@ -66,7 +66,9 @@ func Test入力された内容をtxtファイルに保存することを確認�
 			name: "-textフラグからユーザーの入力を受け取ったときに入力内容をファイルに保存すること",
 			args: args{
 				textFlag: "test.txt",
-				inputVal: "Hello World",
+				inputVal: []string{
+					"Hello World",
+				},
 			},
 			want: "Hello World [ ]\n",
 		},
@@ -74,7 +76,9 @@ func Test入力された内容をtxtファイルに保存することを確認�
 			name: "-textフラグからユーザーの入力を受け取ったときに入力内容をファイルに保存すること",
 			args: args{
 				textFlag: "test",
-				inputVal: "Hello World",
+				inputVal: []string{
+					"Hello World",
+				},
 			},
 			want: "Hello World [ ]\n",
 		},
