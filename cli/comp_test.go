@@ -64,29 +64,29 @@ func Test指定されたファイルのTODOにチェックを入れられるこ�
 		{
 			name: "test.txtの中の「Hello World [ ]」の「[ ]」に「[x]」のようにチェックマークが入ることを確認する",
 			args: args{
-				text:     "Hello World",
+				text:     "[]Hello World",
 				input:    "1",
 				fileName: "test.txt",
 			},
-			want: "Hello World [x]\n",
+			want: "[x] Hello World\n",
 		},
 		{
 			name: "test.txtの中の「Hello [ ]」の「[ ]」に「[x]」のようにチェックマークが入ることを確認する",
 			args: args{
-				text:     "Hello",
+				text:     "[]Hello",
 				input:    "1",
 				fileName: "test.txt",
 			},
-			want: "Hello [x]\n",
+			want: "[x] Hello\n",
 		},
 		{
 			name: "入力値が数字以外のときにエラーを返すことを確認する",
 			args: args{
-				text:     "Hello",
+				text:     "[]Hello",
 				input:    "test",
 				fileName: "test.txt",
 			},
-			want:    "Hello [x]\n",
+			want:    "[x] Hello\n",
 			wantErr: true,
 		},
 	}

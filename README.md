@@ -22,4 +22,6 @@ This tool makes it easy to manage TODO from the command line.
 
 -  ` = ` : This character is converted to ` ◎ `, please use it for important items.
 
-- ` ; ` : Please use this character at the end of the line as it is recognized as ` newline `.
+- ` [] ` : Please use it when creating TODO list. Please use --comp flag when done.
+
+- ` end ` : This character means completion of input.

@@ -25,7 +25,7 @@ func StartCli(args []string) error {
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:  "text, t",
-			Usage: "set contents to text file.\nPlease put the text in the first argument.",
+			Usage: "set contents to text file.\nPlease put the file name in the first argument.",
 		},
 		cli.StringFlag{
 			Name:  "read, r",
