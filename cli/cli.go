@@ -45,11 +45,7 @@ func StartCli(args []string) error {
 
 		if fileName := c.String("text"); fileName != "" {
 			textFlag := NewTextFlag(fileName)
-			err := textFlag.FlagAction()
-			if err != nil {
-				color.Red("ERROR: %v", err)
-				return err
-			}
+			textFlag.FlagAction()
 			return nil
 		}
 
@@ -59,11 +55,15 @@ func StartCli(args []string) error {
 			sentences := strings.Split(fileContents, "\n")
 
 			fmt.Print("===== TODO LIST =====\n\n")
-			for i := 0; i < len(sentences); i++ {
-				if strings.HasSuffix(sentences[i], "[x]") {
-					color.Cyan("%s", sentences[i])
+			for _, s := range sentences {
+				if !strings.HasPrefix(s, "[ ]") {
+					color.Magenta(" %s", s)
+				}
+
+				if strings.HasPrefix(s, "[x]") {
+					color.Cyan(" %s", s)
 				} else {
-					color.Red("%s", sentences[i])
+					color.Red(" %s", s)
 				}
 			}
 			fmt.Print("===== END =====")

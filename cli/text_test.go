@@ -70,17 +70,17 @@ func Test入力された内容をtxtファイルに保存することを確認�
 					"Hello World",
 				},
 			},
-			want: "Hello World [ ]\n",
+			want: "Hello World\n",
 		},
 		{
 			name: "-textフラグからユーザーの入力を受け取ったときに入力内容をファイルに保存すること",
 			args: args{
 				textFlag: "test",
 				inputVal: []string{
-					"Hello World",
+					"[]Hello World",
 				},
 			},
-			want: "Hello World [ ]\n",
+			want: "[ ] Hello World\n",
 		},
 	}
 	for _, tt := range tests {
@@ -99,6 +99,7 @@ func Test入力された内容をtxtファイルに保存することを確認�
 	}
 }
 
+// 入力を無限に受け付けるためエラーになる
 func Testメモを入力できることを確認するテスト(t *testing.T) {
 	type args struct {
 		input    string
@@ -116,44 +117,37 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 				input:    "Hello World",
 				fileName: "test.txt",
 			},
-			want: "Hello World [ ]\n",
+			want: "Hello World\n",
 		},
 		{
 			name: "入力した内容が指定したテキストファイルに保存されていることを確認する",
 			args: args{
-				input:    "Hello",
+				input:    "[]Hello",
 				fileName: "test.txt",
 			},
-			want: "Hello [ ]\n",
+			want: "[ ] Hello\n",
 		},
 		{
 			name: "ファイル名が空のときエラーが出力されていることを確認する",
 			args: args{
-				input:    "",
-				fileName: "test",
+				input:    "hahaha",
+				fileName: "",
 			},
-			want:    "Hello World [ ]\n",
-			wantErr: true,
+			want: "",
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			test.InputValueCheck(tt.args.input, func() {
 				tf := NewTextFlag(tt.args.fileName)
-				err := tf.FlagAction()
+				tf.FlagAction()
 				defer os.Remove(tt.args.fileName)
 
-				if tt.wantErr && err == nil {
-					test.NotOutputtedErrorf(err, t)
-				}
-
 				get := file.PrintReadFile(tf.Value)
-				if !tt.wantErr && get != tt.want {
-					test.MismatchErrorf(get, tt.want, t)
+				if get != tt.want {
+					t.Errorf("値が一致していません: get = %v, want = %v", get, tt.want)
 				}
-
 			})
-
 		})
 	}
 }

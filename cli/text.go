@@ -22,25 +22,27 @@ func NewTextFlag(value string) *TextFlag {
 	return &TextFlag{Value: file}
 }
 
-func (t *TextFlag) FlagAction() error {
+func (t *TextFlag) FlagAction() {
+	fileContents := file.PrintReadFile(t.Value)
+	if fileContents == "" {
+		fmt.Printf("\n%s\n", fileContents)
+	}
+
 	var contents []string
 	lineNum := 1
+	fmt.Print("======= TODOを入力してください =======\n")
 	for {
-		fmt.Print("======= TODOを入力してください =======\n")
 		fmt.Printf("ememo[line %d]: ", lineNum)
-		text, err := input.GetUserInputValue()
-		if err != nil {
-			return err
-		}
+		text := input.GetUserInputValue()
 
 		edit := strings.Split(text, " ")
 		if edit[0] == "edit" {
 			editLineNum, err := strconv.Atoi(edit[1])
 			if err == nil {
-				fmt.Printf("ememo edit(line %d): ", editLineNum)
-				newEditTxt, err := input.GetUserInputValue()
-				if err != nil {
-					return err
+				fmt.Printf("ememo_edit[line %d]: ", editLineNum)
+				newEditTxt := input.GetUserInputValue()
+				if newEditTxt == "" {
+					continue
 				}
 
 				contents[editLineNum-1] = newEditTxt
@@ -60,7 +62,7 @@ func (t *TextFlag) FlagAction() error {
 
 	t.save(contents)
 
-	return nil
+	return
 }
 
 func (t TextFlag) save(contents []string) string {
@@ -71,15 +73,18 @@ func (t TextFlag) save(contents []string) string {
 	}
 	defer fileData.Close()
 
-	for _, text := range contents {
-		contents := format.ChengeToMarkdown(text)
-		//書き込み処理
-		fmt.Fprintln(fileData, contents)
+	var fileContents string
+	totalContants := len(contents) - 1
+	for i, text := range contents {
+		fileContents += format.ChangeToMarkdown(text, i < totalContants)
 	}
 
-	fileContents := file.PrintReadFile(t.Value)
+	//書き込み処理
+	fmt.Fprintln(fileData, fileContents)
+
+	body := file.PrintReadFile(t.Value)
 
 	log.Printf("TODOを追加しました")
 
-	return fileContents
+	return body
 }

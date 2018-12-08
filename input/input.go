@@ -5,8 +5,6 @@ import (
 	"errors"
 	"os"
 	"strings"
-
-	"github.com/fatih/color"
 )
 
 func CheckingUserInputArgumentValue(args []string) error {
@@ -23,15 +21,11 @@ func AddExtension(fileName string) string {
 	return setFile
 }
 
-func GetUserInputValue() (string, error) {
+func GetUserInputValue() string {
 	// Scannerを使って一行読み
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
 	inputText := scanner.Text()
-	if inputText == "" {
-		return "", errors.New("入力値を空にすることは出来ません")
-	}
 
-	color.HiGreen("input value is ` %s `", inputText)
-	return inputText, nil
+	return inputText
 }

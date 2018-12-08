@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -35,15 +36,19 @@ func (c *CompFlag) FlagAction() (string, error) {
 	}
 	defer readFileData.Close()
 
+	var totalLines int
 	todoList := file.FileScan(readFileData,
 		func(scanner *bufio.Scanner, index int) string {
+			totalLines = index
 			return strconv.Itoa(index) + ". " + scanner.Text() + "\n"
 		},
 	)
 	fmt.Println(todoList)
 	fmt.Print("完了したTODOの番号を上記から選んでください: ")
-	input, err := input.GetUserInputValue()
-	if err != nil {
+	input := input.GetUserInputValue()
+	if input == "" {
+		err := errors.New("入力値を空にすることは出来ません")
+		color.Red("input error: %v", err)
 		return "", err
 	}
 
@@ -52,15 +57,17 @@ func (c *CompFlag) FlagAction() (string, error) {
 		return "", err
 	}
 
-	contents := c.printReadCompTodo(sentenceNum)
+	contents := c.printReadCompTodo(sentenceNum, totalLines)
 	fmt.Fprintln(fileData, contents)
 
 	fileContents := file.PrintReadFile(c.FileName)
 
+	fmt.Println("\n" + fileContents + "\n")
+
 	return fileContents, nil
 }
 
-func (c CompFlag) printReadCompTodo(sentenceNum int) string {
+func (c CompFlag) printReadCompTodo(sentenceNum, totalLines int) string {
 	fileData, err := os.Open(c.FileName)
 	if err != nil {
 		color.Red("ERROR: %v", err)
@@ -69,13 +76,17 @@ func (c CompFlag) printReadCompTodo(sentenceNum int) string {
 	defer fileData.Close()
 
 	return file.FileScan(fileData, func(scanner *bufio.Scanner, index int) string {
-		var compTodo string
+		text := scanner.Text()
+
 		if sentenceNum == index {
-			compTodo = strings.Replace(scanner.Text(), "[ ]", "[x]", 1)
-			return compTodo + "\n"
+			text = strings.Replace(text, "[ ]", "[x]", 1)
 		}
 
-		return scanner.Text() + "\n"
+		if index < totalLines {
+			text += "\n"
+		}
+
+		return text
 
 	})
 }

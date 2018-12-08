@@ -6,7 +6,7 @@ import (
 
 func MismatchErrorf(get, want interface{}, tb testing.TB) {
 	tb.Helper()
-	tb.Errorf("値が一致していません: get = %s want = %s", get, want)
+	tb.Errorf("値が一致していません: get = %v want = %v", get, want)
 }
 
 func NotOutputtedErrorf(err error, tb testing.TB) {

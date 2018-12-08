@@ -5,8 +5,12 @@ import (
 	"strings"
 )
 
-func ChengeToMarkdown(text string) string {
+func ChangeToMarkdown(text string, isNextLine bool) string {
 	var sentence string
+
+	if text == "" && isNextLine {
+		return "\n"
+	}
 
 	switch string([]rune(text)[0]) {
 	case "-":
@@ -18,10 +22,12 @@ func ChengeToMarkdown(text string) string {
 	}
 
 	if string([]rune(text)[0:2]) == "[]" {
-		sentence = strings.Replace(text, "[]", "[ ] ", 1) + "\n"
+		sentence = strings.Replace(text, "[]", "[ ] ", 1)
 	}
 
-	sentence += "\n"
+	if isNextLine {
+		sentence += "\n"
+	}
 
 	return sentence
 }
@@ -30,7 +36,7 @@ func ShowMarkdown() {
 	fmt.Print("\n====== Markdown List ======\n\n")
 	fmt.Print(" - : [ ● ] に変換されるので簡単にリストを作成できます\n")
 	fmt.Print(" = : [ ◎ ] に変換されるので重要な項目に利用してください\n")
-	fmt.Print(" [] : TODOリストを作成したいときに利用してください\n=> --compフラグを使うことで完了を明示的にあらわす事が出来ます\n")
+	fmt.Print(" [] : TODOリストを作成したいときに利用してください。--compフラグを使うことで完了を明示的にあらわす事が出来ます。\n")
 	fmt.Print(" end : [ 入力終了 ] として認識されます\n")
 	fmt.Print("\n====== END ======\n")
 }

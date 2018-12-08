@@ -6,7 +6,6 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/keiya01/ememo/format"
 	"github.com/keiya01/ememo/test"
 )
 
@@ -62,18 +61,18 @@ func Test指定されたファイルのTODOにチェックを入れられるこ�
 		wantErr bool
 	}{
 		{
-			name: "test.txtの中の「Hello World [ ]」の「[ ]」に「[x]」のようにチェックマークが入ることを確認する",
+			name: "test.txtの中の「[ ] Hello World」の「[ ]」に「[x]」のようにチェックマークが入ることを確認する",
 			args: args{
-				text:     "[]Hello World",
+				text:     "[ ] Hello World",
 				input:    "1",
 				fileName: "test.txt",
 			},
 			want: "[x] Hello World\n",
 		},
 		{
-			name: "test.txtの中の「Hello [ ]」の「[ ]」に「[x]」のようにチェックマークが入ることを確認する",
+			name: "test.txtの中の「[ ] Hello」の「[ ]」に「[x]」のようにチェックマークが入ることを確認する",
 			args: args{
-				text:     "[]Hello",
+				text:     "[ ] Hello",
 				input:    "1",
 				fileName: "test.txt",
 			},
@@ -82,7 +81,7 @@ func Test指定されたファイルのTODOにチェックを入れられるこ�
 		{
 			name: "入力値が数字以外のときにエラーを返すことを確認する",
 			args: args{
-				text:     "[]Hello",
+				text:     "[ ] Hello",
 				input:    "test",
 				fileName: "test.txt",
 			},
@@ -99,9 +98,8 @@ func Test指定されたファイルのTODOにチェックを入れられるこ�
 				defer os.Remove(cf.FileName)
 				defer fileData.Close()
 
-				contents := format.ChengeToMarkdown(tt.args.text)
 				//書き込み処理
-				fmt.Fprintln(fileData, contents)
+				fmt.Fprintln(fileData, tt.args.text)
 
 				get, err := cf.FlagAction()
 				if tt.wantErr && err == nil {
