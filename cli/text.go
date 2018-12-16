@@ -23,32 +23,62 @@ func NewTextFlag(value string) *TextFlag {
 }
 
 func (t *TextFlag) FlagAction() {
-	fileContents := file.PrintReadFile(t.Value)
-	if fileContents == "" {
-		fmt.Printf("\n%s\n", fileContents)
-	}
-
 	var contents []string
 	lineNum := 1
-	fmt.Print("======= TODOを入力してください =======\n")
+
+	fileContents := file.PrintReadFile(t.Value)
+	if fileContents != "" {
+		contents = strings.Split(fileContents, "\n")
+		for i, content := range contents {
+			// 最終行に空文字が含まれているなら削除する
+			if i == len(contents)-1 {
+				if contents[i] == "" {
+					contents = append(contents[:0], contents[:len(contents)-1]...)
+					fmt.Print("\n")
+					continue
+				}
+			}
+			fmt.Printf("\nememo[line %d]: %s", lineNum, content)
+			lineNum++
+		}
+	} else {
+		fmt.Print("======= TODOを入力してください =======\n")
+	}
+
 	for {
 		fmt.Printf("ememo[line %d]: ", lineNum)
 		text := input.GetUserInputValue()
 
-		edit := strings.Split(text, " ")
-		if edit[0] == "edit" {
-			editLineNum, err := strconv.Atoi(edit[1])
+		textType := strings.Split(text, " ")
+		if len(textType) > 1 {
+			selectedLineNum, err := strconv.Atoi(textType[1])
 			if err == nil {
-				fmt.Printf("ememo_edit[line %d]: ", editLineNum)
-				newEditTxt := input.GetUserInputValue()
-				if newEditTxt == "" {
+				switch textType[0] {
+				case "-e":
+					fmt.Printf("ememo_edit[line %d]: ", selectedLineNum)
+					newEditTxt := input.GetUserInputValue()
+					if newEditTxt == "" {
+						continue
+					}
+					contents[selectedLineNum-1] = newEditTxt
+					continue
+
+				case "-d":
+					fmt.Printf("delete success line %d \n", selectedLineNum)
+					contents = append(contents[:selectedLineNum-1], contents[selectedLineNum:]...)
 					continue
 				}
-
-				contents[editLineNum-1] = newEditTxt
-
-				continue
 			}
+
+		}
+		if textType[0] == "-s" {
+			fmt.Print("\n")
+			for _, content := range contents {
+				txt := format.ChangeToMarkdown(content, true)
+				fmt.Printf("%s", txt)
+			}
+			fmt.Print("\n\n")
+			continue
 		}
 
 		if text == "end" {
@@ -66,7 +96,7 @@ func (t *TextFlag) FlagAction() {
 }
 
 func (t TextFlag) save(contents []string) string {
-	fileData, err := os.OpenFile(t.Value, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	fileData, err := os.OpenFile(t.Value, os.O_RDWR|os.O_CREATE, 0666)
 	if err != nil {
 		color.Red("ERROR: %v", err)
 		return ""

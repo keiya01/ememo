@@ -6,23 +6,29 @@ import (
 )
 
 func ChangeToMarkdown(text string, isNextLine bool) string {
-	var sentence string
 
-	if text == "" && isNextLine {
+	if text == "\n" || len(text) == 0 {
 		return "\n"
 	}
 
-	switch string([]rune(text)[0]) {
-	case "-":
-		sentence = strings.Replace(text, "-", " ● ", 1)
-	case "=":
-		sentence = strings.Replace(text, "=", " ◎ ", 1)
-	default:
-		sentence = text
+	var sentence string
+
+	switch string([]rune(text)[0:2]) {
+	case "[]":
+		sentence = strings.Replace(text, "[]", "[ ] ", 1)
+	case "--":
+		sentence = strings.Replace(text, "--", "   ○ ", 1)
 	}
 
-	if string([]rune(text)[0:2]) == "[]" {
-		sentence = strings.Replace(text, "[]", "[ ] ", 1)
+	if sentence == "" {
+		switch string([]rune(text)[0]) {
+		case "-":
+			sentence = strings.Replace(text, "-", " ● ", 1)
+		case "=":
+			sentence = strings.Replace(text, "=", " ◎ ", 1)
+		default:
+			sentence = text
+		}
 	}
 
 	if isNextLine {

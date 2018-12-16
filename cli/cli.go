@@ -57,7 +57,8 @@ func StartCli(args []string) error {
 			fmt.Print("===== TODO LIST =====\n\n")
 			for _, s := range sentences {
 				if !strings.HasPrefix(s, "[ ]") {
-					color.Magenta(" %s", s)
+					color.Green(" %s", s)
+					continue
 				}
 
 				if strings.HasPrefix(s, "[x]") {
@@ -66,7 +67,7 @@ func StartCli(args []string) error {
 					color.Red(" %s", s)
 				}
 			}
-			fmt.Print("===== END =====")
+			fmt.Print("===== END =====\n")
 
 			return nil
 		}
