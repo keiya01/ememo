@@ -20,6 +20,8 @@ This tool makes it easy to manage TODO from the command line.
 ## Markdown
 - ` - ` : This character is converted to ` ● ` so you can easily create a list.
 
+- ` -- ` : This character is converted to ` ○ ` so you can easily create a list. this character is child element for ` - `
+
 -  ` = ` : This character is converted to ` ◎ `, please use it for important items.
 
 - ` [] ` : Please use it when creating TODO list. Please use --comp flag when done.
