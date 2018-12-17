@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/keiya01/ememo/input"
 	"github.com/keiya01/ememo/test"
 )
 
@@ -91,7 +92,7 @@ func Test指定されたファイルのTODOにチェックを入れられるこ�
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			test.InputValueCheck(tt.args.input, func() {
+			input.InputValueCheck(tt.args.input, func() {
 				cf := NewCompFlag(tt.args.fileName)
 
 				fileData, _ := os.OpenFile(cf.FileName, os.O_RDWR|os.O_CREATE, 0666)

@@ -41,6 +41,7 @@ func ChangeToMarkdown(text string, isNextLine bool) string {
 func ShowMarkdown() {
 	fmt.Print("\n====== Markdown List ======\n\n")
 	fmt.Print(" - : [ ● ] に変換されるので簡単にリストを作成できます\n")
+	fmt.Print(" -- : [ ○ ] に変換されるので簡単にリストを作成できます。この文字は`-`に続けて利用します。\n")
 	fmt.Print(" = : [ ◎ ] に変換されるので重要な項目に利用してください\n")
 	fmt.Print(" [] : TODOリストを作成したいときに利用してください。--compフラグを使うことで完了を明示的にあらわす事が出来ます。\n")
 	fmt.Print(" end : [ 入力終了 ] として認識されます\n")

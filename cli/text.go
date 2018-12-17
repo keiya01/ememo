@@ -2,15 +2,14 @@ package cli
 
 import (
 	"fmt"
-	"log"
-	"os"
-	"strconv"
-	"strings"
-
 	"github.com/fatih/color"
 	"github.com/keiya01/ememo/file"
 	"github.com/keiya01/ememo/format"
 	"github.com/keiya01/ememo/input"
+	"log"
+	"os"
+	"strconv"
+	"strings"
 )
 
 type TextFlag struct {
@@ -47,6 +46,7 @@ func (t *TextFlag) FlagAction() {
 
 	for {
 		fmt.Printf("ememo[line %d]: ", lineNum)
+
 		text := input.GetUserInputValue()
 
 		textType := strings.Split(text, " ")

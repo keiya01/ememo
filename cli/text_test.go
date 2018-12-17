@@ -7,7 +7,6 @@ import (
 
 	"github.com/keiya01/ememo/file"
 	"github.com/keiya01/ememo/input"
-	"github.com/keiya01/ememo/test"
 )
 
 func Testユーザーの入力を受け取ることができることを確認するテスト(t *testing.T) {
@@ -138,7 +137,7 @@ func Testメモを入力できることを確認するテスト(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			test.InputValueCheck(tt.args.input, func() {
+			input.InputValueCheck(tt.args.input, func() {
 				tf := NewTextFlag(tt.args.fileName)
 				tf.FlagAction()
 				defer os.Remove(tt.args.fileName)
