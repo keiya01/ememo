@@ -86,7 +86,7 @@ func StartCli(args []string) error {
 			format.ShowMarkdown()
 			return nil
 		}
-		err := errors.New("「" + args[1] + "」オプションは使用できません。「-h」オプションで確認してください。")
+		err := errors.New("Error: コマンドを「-h」オプションで確認してください。")
 		color.HiRed("ERROR: %v", err)
 		return err
 	}
