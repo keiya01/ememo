@@ -69,7 +69,6 @@ func (t *TextFlag) FlagAction() {
 					continue
 				}
 			}
-
 		}
 		if textType[0] == "-s" {
 			fmt.Print("\n")
@@ -96,7 +95,7 @@ func (t *TextFlag) FlagAction() {
 }
 
 func (t TextFlag) save(contents []string) string {
-	fileData, err := os.OpenFile(t.Value, os.O_RDWR|os.O_CREATE, 0666)
+	fileData, err := os.OpenFile(t.Value, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {
 		color.Red("ERROR: %v", err)
 		return ""
@@ -114,7 +113,7 @@ func (t TextFlag) save(contents []string) string {
 
 	body := file.PrintReadFile(t.Value)
 
-	log.Printf("TODOを追加しました")
+	log.Print("TODOを追加しました")
 
 	return body
 }

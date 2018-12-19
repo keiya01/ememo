@@ -25,6 +25,7 @@ func AddExtension(fileName string) string {
 func GetUserInputValue() string {
 	// Scannerを使って一行読み
 	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Split(bufio.ScanWords)
 	scanner.Scan()
 	inputText := scanner.Text()
 

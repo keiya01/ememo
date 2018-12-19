@@ -45,5 +45,8 @@ func ShowMarkdown() {
 	fmt.Print(" = : [ ◎ ] に変換されるので重要な項目に利用してください\n")
 	fmt.Print(" [] : TODOリストを作成したいときに利用してください。--compフラグを使うことで完了を明示的にあらわす事が出来ます。\n")
 	fmt.Print(" end : [ 入力終了 ] として認識されます\n")
+	fmt.Print(" -e line_number : line_numberに指定した行を編集します\n")
+	fmt.Print(" -d line_number : line_numberに指定した行を削除します\n")
+	fmt.Print(" -s : 入力したテキストにマークダウンが適用されたものを確認できます\n")
 	fmt.Print("\n====== END ======\n")
 }
